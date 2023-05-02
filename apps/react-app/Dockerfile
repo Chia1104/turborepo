@@ -11,7 +11,7 @@ RUN apk update && \
     apk add --no-cache \
     libc6-compat && \
     yarn global add turbo && \
-    turbo prune --scope=react --docker
+    turbo prune --scope=react-app --docker
 
 FROM base AS installer
 
@@ -35,12 +35,12 @@ RUN apk update && \
     libc6-compat && \
     yarn global add pnpm && \
     pnpm i && \
-    yarn turbo run build --filter=react...    
+    yarn turbo run build --filter=react-app...    
 
 FROM nginx:alpine
 
-COPY /docker/react/nginx.conf /etc/nginx/conf.d/configfile.template
-COPY --from=installer /app/apps/react/dist /usr/share/nginx/html
+COPY apps/react-app/docker/nginx.conf /etc/nginx/conf.d/configfile.template
+COPY --from=installer /app/apps/react-app/dist /usr/share/nginx/html
 
 ENV NODE_ENV=production \
     PORT=8080 \
