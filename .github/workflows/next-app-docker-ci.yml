@@ -1,4 +1,4 @@
-name: www Docker CI
+name: next-app Docker CI
 
 on:
   push:
@@ -6,20 +6,18 @@ on:
   pull_request:
     types: [ opened, labeled, unlabeled, synchronize ]
     paths:
-      - "apps/www/**"
-      - "packages/ui/**"
-      - ".github/workflows/www-docker-ci.yml"
+      - "apps/next-app/**"
+      - "packages/**"
+      - "shared/**"
+      - ".github/workflows/next-app-docker-ci.yml"
       - "package.json"
 
 env:
-  GH_PUBLIC_TOKEN: ${{ secrets.GH_PUBLIC_TOKEN }}
-  NEXT_PUBLIC_RE_CAPTCHA_KEY: ${{ secrets.NEXT_PUBLIC_RE_CAPTCHA_KEY }}
-  RE_CAPTCHA_KEY: ${{ secrets.RE_CAPTCHA_KEY }}
-  GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-  SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
-  SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+  GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+  NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
   TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   PNPM_VERSION: 8.2.0
@@ -30,7 +28,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'www:docker') || contains(github.event.pull_request.labels.*.name, 'www:enhancement') }}
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'next-app:docker') || contains(github.event.pull_request.labels.*.name, 'next-app:enhancement') }}
 
     steps:
       -
@@ -50,17 +48,15 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./apps/www/Dockerfile
+          file: ./apps/next-app/Dockerfile
           push: false
           load: false
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/chia1104-www:${{ env.GIT_HASH }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/next-app:${{ env.GIT_HASH }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            GH_PUBLIC_TOKEN=${{ env.GH_PUBLIC_TOKEN }}
-            NEXT_PUBLIC_RE_CAPTCHA_KEY=${{ env.NEXT_PUBLIC_RE_CAPTCHA_KEY }}
-            GOOGLE_API_KEY=${{ env.GOOGLE_API_KEY }}
-            SPOTIFY_CLIENT_ID=${{ env.SPOTIFY_CLIENT_ID }}
-            SPOTIFY_CLIENT_SECRET=${{ env.SPOTIFY_CLIENT_SECRET }}
+            GOOGLE_CLIENT_ID=${{ env.GOOGLE_CLIENT_ID }}
+            GOOGLE_CLIENT_SECRET=${{ env.GOOGLE_CLIENT_SECRET }}
+            NEXTAUTH_SECRET=${{ env.NEXTAUTH_SECRET }}
             TURBO_TEAM=${{ env.TURBO_TEAM }}
             TURBO_TOKEN=${{ env.TURBO_TOKEN }}

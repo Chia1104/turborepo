@@ -1,4 +1,4 @@
-name: dash CI
+name: next-app CI
 
 on:
   push:
@@ -6,9 +6,10 @@ on:
   pull_request:
     types: [ opened, labeled, unlabeled, synchronize ]
     paths:
-      - "apps/dash/**"
-      - "packages/ui/**"
-      - ".github/workflows/dash-ci.yml"
+      - "apps/next-app/**"
+      - "packages/**"
+      - "shared/**"
+      - ".github/workflows/next-app-docker-ci.yml"
       - "package.json"
 
 env:
@@ -25,7 +26,7 @@ jobs:
     name: Build and Test
     timeout-minutes: 15
     runs-on: ubuntu-latest
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'area:dash') || contains(github.event.pull_request.labels.*.name, 'dash:enhancement') }}
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'area:next-app') || contains(github.event.pull_request.labels.*.name, 'next-app:enhancement') }}
 
     steps:
       - name: Check out code
@@ -63,14 +64,27 @@ jobs:
       - name: Next.js cache
         uses: actions/cache@v3
         with:
-          path: ${{ github.workspace }}/apps/dash/.next/cache
+          path: ${{ github.workspace }}/apps/next-app/.next/cache
           key: ${{ runner.os }}-${{ runner.node }}-${{ hashFiles('**/pnpm-lock.yaml') }}-nextjs
 
       - name: ESLint
-        run: pnpm lint --filter dash...
+        run: pnpm lint --filter next-app...
 
       - name: Type checking
-        run: pnpm type:check --filter dash...
+        run: pnpm type:check --filter next-app...
 
       - name: Unit tests
-        run: pnpm test --filter dash...
+        run: pnpm test --filter next-app...
+
+      - name: Playwright install
+        run: pnpx playwright install --with-deps
+
+      - name: E2E tests
+        run: pnpm test:e2e --filter next-app...
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: tests/next-app/playwright-report/
+          retention-days: 30  

@@ -28,7 +28,7 @@ const Button = forwardRef<
   ButtonHTMLAttributes<HTMLButtonElement> &
     VariantProps<typeof buttonVariants> &
     MotionProps
->(({ className, children, color, noneStyle, ...props }) => {
+>(({ className, children, color, ...props }) => {
   return (
     <motion.button
       whileTap={{
