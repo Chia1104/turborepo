@@ -11,7 +11,7 @@ RUN apk update && \
     apk add --no-cache \
     libc6-compat && \
     yarn global add turbo && \
-    turbo prune --scope=dash --docker
+    turbo prune --scope=next-app --docker
 
 FROM base AS installer
 
@@ -34,7 +34,7 @@ RUN apk update && \
     yarn global add pnpm && \
     pnpm i && \
     yarn turbo run db:generate && \
-    yarn turbo run build --filter=dash...
+    yarn turbo run build --filter=next-app...
 
 FROM base AS runner
 WORKDIR /app
@@ -44,12 +44,12 @@ RUN adduser --system --uid 1001 nextjs
 
 USER nextjs
 
-COPY --from=installer /app/apps/dash/next.config.mjs .
-COPY --from=installer /app/apps/dash/package.json .
-COPY --from=installer /app/apps/dash/public ./apps/dash/public
+COPY --from=installer /app/apps/next-app/next.config.mjs .
+COPY --from=installer /app/apps/next-app/package.json .
+COPY --from=installer /app/apps/next-app/public ./apps/next-app/public
 
-COPY --from=installer --chown=nextjs:nodejs /app/apps/dash/.next/standalone ./
-COPY --from=installer --chown=nextjs:nodejs /app/apps/dash/.next/static ./apps/dash/.next/static
+COPY --from=installer --chown=nextjs:nodejs /app/apps/next-app/.next/standalone ./
+COPY --from=installer --chown=nextjs:nodejs /app/apps/next-app/.next/static ./apps/next-app/.next/static
 
 ARG DATABASE_URL \
     NEXTAUTH_SECRET \
@@ -65,4 +65,4 @@ ENV DATABASE_URL=${DATABASE_URL} \
 
 EXPOSE 8080
 
-CMD node apps/dash/server.js
+CMD node apps/next-app/server.js
