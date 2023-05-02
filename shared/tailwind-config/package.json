@@ -1,10 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/package",
-  "name": "@shared/tailwind-config",
+  "name": "tailwind-config",
   "types": "index.d.ts",
   "version": "0.0.1",
   "private": true,
   "main": "index.js",
+  "script": {
+    "clean": "git clean -xdf .turbo node_modules"
+  },
   "devDependencies": {
     "tailwindcss": "^3.3.2",
     "tailwindcss-animate": "^1.0.5"

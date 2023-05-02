@@ -20,17 +20,6 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    plugin(function ({ addComponents }) {
-      addComponents({
-        ".ctw-container": {
-          width: "100%",
-          marginLeft: "auto",
-          marginRight: "auto",
-        },
-      });
-    }),
-  ],
   darkMode: "class",
 };
 

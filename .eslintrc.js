@@ -2,6 +2,7 @@ const TAILWIND_CONFIG = {
   extends: ["plugin:tailwindcss/recommended"],
   rules: {
     "tailwindcss/classnames-order": "off", // conflicts with prettier-plugin-tailwindcss
+    "tailwindcss/no-custom-classname": "off",
   },
 };
 
@@ -42,22 +43,6 @@ module.exports = {
         "react/no-unknown-property": "off",
         "react-hooks/exhaustive-deps": "warn",
         "react/self-closing-comp": "error",
-        "no-restricted-syntax": [
-          "error",
-          {
-            // ❌ useMemo(…, [])
-            selector:
-              "CallExpression[callee.name=useMemo][arguments.1.type=ArrayExpression][arguments.1.elements.length=0]",
-            message:
-              "`useMemo` with an empty dependency array can't provide a stable reference, use `useRef` instead.",
-          },
-          {
-            // ❌ z.object(…)
-            selector:
-              "MemberExpression[object.name=z] > .property[name=object]",
-            message: "Use z.strictObject is more safe.",
-          },
-        ],
         "react/jsx-filename-extension": [
           "error",
           { extensions: [".tsx", ".jsx"], allow: "as-needed" },
@@ -76,7 +61,11 @@ module.exports = {
     {
       files: "**/*.{ts,tsx,cts,mts}",
       parserOptions: {
-        project: ["packages/*/tsconfig.json", "apps/*/tsconfig.json"],
+        project: [
+          "packages/*/tsconfig.json",
+          "apps/*/tsconfig.json",
+          "tests/*/tsconfig.json",
+        ],
       },
       rules: {
         "@typescript-eslint/ban-ts-comment": "off",
@@ -95,7 +84,7 @@ module.exports = {
     },
     {
       ...TAILWIND_CONFIG,
-      files: "apps/next/**",
+      files: "apps/next-app/**",
       plugins: [],
       rules: {
         ...TAILWIND_CONFIG.rules,
@@ -103,10 +92,11 @@ module.exports = {
     },
     {
       ...TAILWIND_CONFIG,
-      files: "apps/react/**",
+      files: "apps/react-app/**",
       plugins: [],
       rules: {
         ...TAILWIND_CONFIG.rules,
+        "@next/next/no-img-element": "off",
       },
     },
     {

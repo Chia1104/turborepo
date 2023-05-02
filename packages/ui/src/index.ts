@@ -1,10 +1,7 @@
 "use client";
 
-export { default as Input } from "./Input";
-export * from "./Input";
-export { default as Modal } from "./Modal";
-export { default as Page } from "./Page";
-export { default as Textarea } from "./Textarea";
-export * from "./Textarea";
-export * from "./utils";
-export { default as ToggleTheme } from "./ToggleTheme";
+export { default as Button } from "./client/button";
+export { default as Input } from "./client/input";
+export { default as FadeIn } from "./client/fade-in";
+export { default as Modal } from "./client/modal";
+export * from "./client/avatar";

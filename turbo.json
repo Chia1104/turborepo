@@ -5,14 +5,7 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
-    "react#build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dixt/**"],
-      "env": [
-        "VITE_ENV_EXAMPLE"
-      ]
-    },
-    "next#build": {
+    "next-app#build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**"],
       "env": [
@@ -21,6 +14,9 @@
         "NEXTAUTH_URL",
         "NEXTAUTH_SECRET"
       ]
+    },
+    "react-app#build": {
+      "dependsOn": ["^build"]
     },
     "lint": {
       "dependsOn": ["^build"],
@@ -34,14 +30,6 @@
       "outputs": ["coverage/**"],
       "cache": true
     },
-    "e2e:chrome": {
-      "dependsOn": ["^build"],
-      "outputs": []
-    },
-    "e2e:edge": {
-      "dependsOn": ["^build"],
-      "outputs": []
-    },
     "test:watch": {
       "outputs": []
     },
@@ -51,12 +39,16 @@
     },
     "start": {
       "dependsOn": ["^build"],
-      "cache": false,
-      "persistent": true
+      "cache": false
     },
     "clean": {
       "cache": false
+    },
+    "test:e2e": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**", "playwright-report/**"],
+      "cache": true
     }
   },
-  "globalEnv": ["HOST", "PORT", "NODE_ENV", "ANALYZE"]
+  "globalEnv": ["HOST", "PORT", "NODE_ENV", "ANALYZE", "CI"]
 }

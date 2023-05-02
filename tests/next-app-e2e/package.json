@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/package",
+  "name": "next-app-e2e",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev:e2e": "npx playwright test",
+    "start:next-app": "cd ../../apps/next-app && PORT=3002 HOST=127.0.0.1 npx next start",
+    "test:e2e": "start-server-and-test start:next-app http://127.0.0.1:3002 dev:e2e",
+    "clean": "git clean -xdf .turbo node_modules"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.33.0",
+    "start-server-and-test": "^2.0.0",
+    "tsconfig": "workspace:*",
+    "next-app": "workspace:*"
+  }
+}
